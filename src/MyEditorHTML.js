@@ -6,9 +6,10 @@ import {
   convertToRaw,
   convertFromRaw
 } from "draft-js";
+import { stateToHTML } from "draft-js-export-html";
 import "draft-js/dist/Draft.css";
 
-class MyEditor extends React.Component {
+class MyEditorHTML extends React.Component {
   constructor(props) {
     super(props);
     this.state = { editorState: EditorState.createEmpty() };
@@ -77,6 +78,12 @@ class MyEditor extends React.Component {
     }
   };
 
+  getContentAsRawHtml() {
+    const contentState = this.state.editorState.getCurrentContent();
+    const html = stateToHTML(contentState);
+    return { __html: html };
+  }
+
   render() {
     const { editorState } = this.state;
 
@@ -126,9 +133,7 @@ class MyEditor extends React.Component {
           <button onClick={this.saveContent}>Save content</button>
           <button onClick={this.setEditorContent}>Load content</button>
         </div>
-        <div>
-          <pre>{this.getContentAsRawJson()}</pre>
-        </div>
+        <div dangerouslySetInnerHTML={this.getContentAsRawHtml()} />
       </div>
     );
   }
@@ -237,4 +242,4 @@ const InlineStyleControls = props => {
   );
 };
 
-export default MyEditor;
+export default MyEditorHTML;
